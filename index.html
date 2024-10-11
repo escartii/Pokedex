@@ -29,9 +29,18 @@
 
         nav {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            gap: 20px;
+            padding: 0 20px;
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 30px;
+            color: white;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
 
         nav ul {
@@ -163,12 +172,53 @@
             color: #ffcb05;
             text-decoration: none;
         }
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            /* Mostrar el botón de hamburguesa en pantallas pequeñas */
+            .menu-toggle {
+                display: block;
+            }
+
+            nav ul {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                background: linear-gradient(90deg, #ff0000, #ffcb05);
+                top: 60px;
+                left: 0;
+                width: 100%;
+                padding: 20px;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            nav ul li {
+                text-align: center;
+                width: 100%;
+            }
+
+            .pokemon-container {
+                flex-direction: column;
+            }
+
+            .pokemon-card {
+                width: 90%; /* Ajustar el ancho de las tarjetas */
+                margin: 0 auto;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Header con Navbar -->
     <header>
         <nav>
+            <button class="menu-toggle" aria-label="Abrir menú">
+                &#9776; <!-- Ícono de hamburguesa -->
+            </button>
             <ul>
                 <li><a href="#">Inicio</a></li>
                 <li><a href="#">Pokédex</a></li>
@@ -180,7 +230,6 @@
 
     <!-- Selector de Generaciones -->
     <div class="generation-selector">
-
         <select id="generation">
             <option value="1">Generación 1 (1-151)</option>
             <option value="2">Generación 2 (152-251)</option>
@@ -205,6 +254,13 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('nav ul');
+
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+
             const selectGeneracion = document.getElementById('generation');
 
             // Diccionario para traducir tipos al español
@@ -282,37 +338,36 @@
             }
 
             // Función para mostrar Pokémon en tarjetas, ordenados por su número de Pokédex
-function mostrarPokemonEnLista(pokemonList) {
-    const pokemonContainer = document.getElementById('pokemon-list');
-    pokemonContainer.innerHTML = ''; // Limpiar cualquier contenido previo
+            function mostrarPokemonEnLista(pokemonList) {
+                const pokemonContainer = document.getElementById('pokemon-list');
+                pokemonContainer.innerHTML = ''; // Limpiar cualquier contenido previo
 
-    // Obtener detalles de cada Pokémon y almacenarlos en un array
-    const promises = pokemonList.map(pokemon => fetch(pokemon.url).then(response => response.json()));
+                // Obtener detalles de cada Pokémon y almacenarlos en un array
+                const promises = pokemonList.map(pokemon => fetch(pokemon.url).then(response => response.json()));
 
-    Promise.all(promises)
-        .then(pokemonDetails => {
-            // Ordenar los Pokémon por su id
-            pokemonDetails.sort((a, b) => a.id - b.id);
+                Promise.all(promises)
+                    .then(pokemonDetails => {
+                        // Ordenar los Pokémon por su id
+                        pokemonDetails.sort((a, b) => a.id - b.id);
 
-            // Crear y mostrar las tarjetas de los Pokémon
-            pokemonDetails.forEach(pokemonData => {
-                const pokemonCard = document.createElement('div');
-                pokemonCard.classList.add('pokemon-card');
-                pokemonCard.innerHTML = `
-                    <p class="pokemon-id">#${pokemonData.id.toString().padStart(3, '0')}</p>
-                    <p class="pokemon-name">${pokemonData.name}</p>
-                    <img src="${pokemonData.sprites.front_default}" alt="${pokemonData.name}">
-                    <div>${pokemonData.types.map(typeInfo => 
-                        `<span class="type-${typeInfo.type.name}">${tipoTraducido[typeInfo.type.name]}</span>`).join(' ')
-                    }</div>
-                `;
-                pokemonCard.addEventListener('click', () => obtenerPokemon(pokemonData.name));
-                pokemonContainer.appendChild(pokemonCard);
-            });
-        })
-        .catch(error => console.error('Error al obtener los datos de los Pokémon:', error));
-}
-
+                        // Crear y mostrar las tarjetas de los Pokémon
+                        pokemonDetails.forEach(pokemonData => {
+                            const pokemonCard = document.createElement('div');
+                            pokemonCard.classList.add('pokemon-card');
+                            pokemonCard.innerHTML = `
+                                <p class="pokemon-id">#${pokemonData.id.toString().padStart(3, '0')}</p>
+                                <p class="pokemon-name">${pokemonData.name}</p>
+                                <img src="${pokemonData.sprites.front_default}" alt="${pokemonData.name}">
+                                <div>${pokemonData.types.map(typeInfo => 
+                                    `<span class="type-${typeInfo.type.name}">${tipoTraducido[typeInfo.type.name]}</span>`).join(' ')
+                                }</div>
+                            `;
+                            pokemonCard.addEventListener('click', () => obtenerPokemon(pokemonData.name));
+                            pokemonContainer.appendChild(pokemonCard);
+                        });
+                    })
+                    .catch(error => console.error('Error al obtener los datos de los Pokémon:', error));
+            }
 
             // Función para obtener los detalles de un Pokémon
             function obtenerPokemon(nombrePokemon) {
