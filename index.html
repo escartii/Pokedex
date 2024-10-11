@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokédex</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2 {
+            color: #ffcb05;
+            text-shadow: 2px 2px 2px #333;
+        }
+
+        /* Header y Navbar */
+        header {
+            background: linear-gradient(90deg, #ff0000, #ffcb05);
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Estilo de tarjetas */
+        .pokemon-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            justify-content: center;
+        }
+
+        .pokemon-card {
+            width: 180px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background-color: white;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .pokemon-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .pokemon-card img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .pokemon-card p {
+            margin: 5px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .pokemon-card .pokemon-id {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .pokemon-card .pokemon-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #ff0000;
+        }
+
+        /* Selectores para generaciones */
+        .generation-selector {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .generation-selector select {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ffcb05;
+            border-radius: 5px;
+            background-color: white;
+            color: #333;
+        }
+
+        /* Colores para los tipos */
+        .type-normal { background-color: #A8A77A; color: white; padding: 3px; border-radius: 5px; }
+        .type-fire { background-color: #EE8130; color: white; padding: 3px; border-radius: 5px; }
+        .type-water { background-color: #6390F0; color: white; padding: 3px; border-radius: 5px; }
+        .type-electric { background-color: #F7D02C; color: black; padding: 3px; border-radius: 5px; }
+        .type-grass { background-color: #7AC74C; color: white; padding: 3px; border-radius: 5px; }
+        .type-ice { background-color: #96D9D6; color: white; padding: 3px; border-radius: 5px; }
+        .type-fighting { background-color: #C22E28; color: white; padding: 3px; border-radius: 5px; }
+        .type-poison { background-color: #A33EA1; color: white; padding: 3px; border-radius: 5px; }
+        .type-ground { background-color: #E2BF65; color: white; padding: 3px; border-radius: 5px; }
+        .type-flying { background-color: #A98FF3; color: white; padding: 3px; border-radius: 5px; }
+        .type-psychic { background-color: #F95587; color: white; padding: 3px; border-radius: 5px; }
+        .type-bug { background-color: #A6B91A; color: white; padding: 3px; border-radius: 5px; }
+        .type-rock { background-color: #B6A136; color: white; padding: 3px; border-radius: 5px; }
+        .type-ghost { background-color: #735797; color: white; padding: 3px; border-radius: 5px; }
+        .type-dragon { background-color: #6F35FC; color: white; padding: 3px; border-radius: 5px; }
+        .type-dark { background-color: #705746; color: white; padding: 3px; border-radius: 5px; }
+        .type-steel { background-color: #B7B7CE; color: white; padding: 3px; border-radius: 5px; }
+        .type-fairy { background-color: #D685AD; color: white; padding: 3px; border-radius: 5px; }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            margin-top: 40px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        footer a {
+            color: #ffcb05;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header con Navbar -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Pokédex</a></li>
+                <li><a href="#">Generaciones</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Selector de Generaciones -->
+    <div class="generation-selector">
+
+        <select id="generation">
+            <option value="1">Generación 1 (1-151)</option>
+            <option value="2">Generación 2 (152-251)</option>
+            <option value="3">Generación 3 (252-386)</option>
+            <option value="4">Generación 4 (387-493)</option>
+            <option value="5">Generación 5 (494-649)</option>
+            <option value="6">Generación 6 (650-721)</option>
+            <option value="7">Generación 7 (722-809)</option>
+            <option value="8">Generación 8 (810-898)</option>
+            <option value="9">Generación 9 (899-1010)</option>
+        </select>
+    </div>
+
+    <!-- Contenedor para la lista de Pokémon -->
+    <div class="pokemon-container" id="pokemon-list"></div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Hecho con ❤️ por fanáticos de Pokémon. <a href="#">Contáctanos</a></p>
+        <p>&copy; 2024 Pokédex. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const selectGeneracion = document.getElementById('generation');
+
+            // Diccionario para traducir tipos al español
+            const tipoTraducido = {
+                normal: "Normal",
+                fire: "Fuego",
+                water: "Agua",
+                electric: "Eléctrico",
+                grass: "Planta",
+                ice: "Hielo",
+                fighting: "Lucha",
+                poison: "Veneno",
+                ground: "Tierra",
+                flying: "Volador",
+                psychic: "Psíquico",
+                bug: "Bicho",
+                rock: "Roca",
+                ghost: "Fantasma",
+                dragon: "Dragón",
+                dark: "Siniestro",
+                steel: "Acero",
+                fairy: "Hada"
+            };
+
+            // Función para obtener y mostrar Pokémon según la generación seleccionada
+            function obtenerPokemonPorGeneracion(generacion) {
+                let limit, offset;
+
+                switch (generacion) {
+                    case '1':
+                        limit = 151;
+                        offset = 0;
+                        break;
+                    case '2':
+                        limit = 100;
+                        offset = 151;
+                        break;
+                    case '3':
+                        limit = 135;
+                        offset = 251;
+                        break;
+                    case '4':
+                        limit = 107;
+                        offset = 386;
+                        break;
+                    case '5':
+                        limit = 156;
+                        offset = 493;
+                        break;
+                    case '6':
+                        limit = 72;
+                        offset = 649;
+                        break;
+                    case '7':
+                        limit = 88;
+                        offset = 721;
+                        break;
+                    case '8':
+                        limit = 89;
+                        offset = 809;
+                        break;
+                    case '9':
+                        limit = 112;
+                        offset = 898;
+                        break;
+                }
+
+                fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const pokemonList = data.results;
+                        mostrarPokemonEnLista(pokemonList);
+                    })
+                    .catch(error => console.error('Error al obtener los Pokémon:', error));
+            }
+
+            // Función para mostrar Pokémon en tarjetas
+            function mostrarPokemonEnLista(pokemonList) {
+                const pokemonContainer = document.getElementById('pokemon-list');
+                pokemonContainer.innerHTML = ''; // Limpiar cualquier contenido previo
+
+                pokemonList.forEach((pokemon) => {
+                    fetch(pokemon.url) // Obtenemos detalles de cada Pokémon
+                        .then(response => response.json())
+                        .then(pokemonData => {
+                            const pokemonCard = document.createElement('div');
+                            pokemonCard.classList.add('pokemon-card');
+                            pokemonCard.innerHTML = `
+                                <p class="pokemon-id">#${pokemonData.id.toString().padStart(3, '0')}</p>
+                                <p class="pokemon-name">${pokemonData.name}</p>
+                                <img src="${pokemonData.sprites.front_default}" alt="${pokemonData.name}">
+                                <div>${pokemonData.types.map(typeInfo => 
+                                    `<span class="type-${typeInfo.type.name}">${tipoTraducido[typeInfo.type.name]}</span>`).join(' ')
+                                }</div>
+                            `;
+                            pokemonCard.addEventListener('click', () => obtenerPokemon(pokemonData.name));
+                            pokemonContainer.appendChild(pokemonCard);
+                        })
+                        .catch(error => console.error('Error al obtener los datos del Pokémon:', error));
+                });
+            }
+
+            // Función para obtener los detalles de un Pokémon
+            function obtenerPokemon(nombrePokemon) {
+                fetch(`https://pokeapi.co/api/v2/pokemon/${nombrePokemon}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('No se encontró el Pokémon');
+                        }
+                        return response.json(); // Convertir la respuesta a JSON
+                    })
+                    .then(data => {
+                        mostrarPokemon(data); // Mostrar los detalles del Pokémon
+                    })
+                    .catch(error => console.error('Error al obtener los datos:', error));
+            }
+
+            // Cambiar la generación seleccionada
+            selectGeneracion.addEventListener('change', (event) => {
+                const generacion = event.target.value;
+                obtenerPokemonPorGeneracion(generacion);
+            });
+
+            // Inicializar la página con la primera generación
+            obtenerPokemonPorGeneracion('1');
+        });
+    </script>
+</body>
+</html>
