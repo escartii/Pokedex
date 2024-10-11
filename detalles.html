@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Pokémon</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2 {
+            color: #ffcb05;
+            text-shadow: 2px 2px 2px #333;
+        }
+
+        /* Header y Navbar */
+        header {
+            background: linear-gradient(90deg, #ff0000, #ffcb05);
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 30px;
+            color: white;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Estilo de la sección de detalles */
+        .details-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Hace que el contenedor ocupe toda la altura de la pantalla */
+            padding: 20px;
+        }
+
+        .pokemon-details {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .pokemon-details img {
+            display: block;
+            margin: 0 auto;
+            width: 150px;
+            height: 150px;
+        }
+
+        .pokemon-details h2 {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .pokemon-details p {
+            margin: 10px 0;
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-right: 5px;
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            margin-top: 40px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        footer a {
+            color: #ffcb05;
+            text-decoration: none;
+        }
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            nav ul {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                background: linear-gradient(90deg, #ff0000, #ffcb05);
+                top: 60px;
+                left: 0;
+                width: 100%;
+                padding: 20px;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            nav ul li {
+                text-align: center;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header con Navbar -->
+    <header>
+        <nav>
+            <button class="menu-toggle" aria-label="Abrir menú">
+                &#9776; <!-- Ícono de hamburguesa -->
+            </button>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="#">Pokédex</a></li>
+                <li><a href="#">Generaciones</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Contenedor de detalles del Pokémon -->
+    <div class="details-container">
+        <div class="pokemon-details" id="pokemon-details">
+            <img id="pokemon-image" src="" alt="Imagen del Pokémon">
+            <h2 id="pokemon-name">Nombre</h2>
+            <p id="pokemon-id">ID: #000</p>
+            <p id="pokemon-types">Tipos: </p>
+            <p id="pokemon-height">Altura: </p>
+            <p id="pokemon-weight">Peso: </p>
+            <p id="pokemon-story">Historia: </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Hecho con ❤️ por fanáticos de Pokémon. <a href="#">Contáctanos</a></p>
+        <p>&copy; 2024 Pokédex. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('nav ul');
+
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+
+            // Obtener el ID del Pokémon desde la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const pokemonId = urlParams.get('pokemon');
+
+            // Diccionario para traducir tipos al español
+            const tipoTraducido = {
+                normal: "Normal",
+                fire: "Fuego",
+                water: "Agua",
+                electric: "Eléctrico",
+                grass: "Planta",
+                ice: "Hielo",
+                fighting: "Lucha",
+                poison: "Veneno",
+                ground: "Tierra",
+                flying: "Volador",
+                psychic: "Psíquico",
+                bug: "Bicho",
+                rock: "Roca",
+                ghost: "Fantasma",
+                dragon: "Dragón",
+                dark: "Siniestro",
+                steel: "Acero",
+                fairy: "Hada"
+            };
+
+            // Función para mostrar detalles del Pokémon
+            function mostrarDetallesPokemon(pokemon) {
+                document.getElementById('pokemon-image').src = pokemon.sprites.front_default;
+                document.getElementById('pokemon-name').textContent = pokemon.name;
+                document.getElementById('pokemon-id').textContent = `ID: #${pokemon.id.toString().padStart(3, '0')}`;
+                document.getElementById('pokemon-types').innerHTML = pokemon.types.map(typeInfo =>
+                    `<span class="type-badge" style="background-color:${getTypeColor(typeInfo.type.name)};">${tipoTraducido[typeInfo.type.name]}</span>`).join(' ');
+                document.getElementById('pokemon-height').textContent = `Altura: ${(pokemon.height / 10).toFixed(1)} m`;
+                document.getElementById('pokemon-weight').textContent = `Peso: ${(pokemon.weight / 10).toFixed(1)} kg`;
+            }
+
+            // Función para obtener el color del tipo
+            function getTypeColor(type) {
+                const colors = {
+                    normal: '#A8A77A',
+                    fire: '#EE8130',
+                    water: '#6390F0',
+                    electric: '#F7D02C',
+                    grass: '#7AC74C',
+                    ice: '#96D9D6',
+                    fighting: '#C22E28',
+                    poison: '#A33EA1',
+                    ground: '#E2BF65',
+                    flying: '#A98FF3',
+                    psychic: '#F95587',
+                    bug: '#A6B91A',
+                    rock: '#B6A136',
+                    ghost: '#735797',
+                    dragon: '#6F35FC',
+                    dark: '#705746',
+                    steel: '#B7B7CE',
+                    fairy: '#D685AD'
+                };
+                return colors[type] || '#000';
+            }
+
+            // Obtener los detalles del Pokémon desde la API
+            fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
+                .then(response => response.json())
+                .then(data => mostrarDetallesPokemon(data))
+                .catch(error => console.error('Error al obtener los detalles del Pokémon:', error));
+        });
+    </script>
+</body>
+</html>
